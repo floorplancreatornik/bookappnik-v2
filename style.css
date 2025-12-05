@@ -1,278 +1,831 @@
-/* ========================================================= */
-/* 1. Global Variables & Base Styles */
-/* ========================================================= */
-:root {
-    --primary-color: #d88235; 
-    --light-bg: #f8f8f8; 
-    --text-color: #333;
-    --secondary-text: #666;
-    --border-color: #ccc;
-    --error-color: #e74c3c; 
-    --success-color: #27ae60;
-}
-/* Dark Theme Variables */
-body.dark-theme {
-    --primary-color: #f7a550; 
-    --light-bg: #1e1e1e;
-    --text-color: #f0f0f0;
-    --secondary-text: #cccccc;
-    --border-color: #444;
-    background-color: #121212 !important;
-}
+/* ==================================== */
+/* GLOBAL STYLES & RESETS */
+/* ==================================== */
 body {
-    background-color: var(--light-bg);
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
+    padding: 0;
+    background-color: #f0f4f8; /* Light background */
+    color: #1e3a5a; /* Dark primary text */
+    transition: background-color 0.3s, color 0.3s;
+    -webkit-tap-highlight-color: transparent;
     min-height: 100vh;
-    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
 }
+
+/* Container for the entire application */
 .app-container {
     width: 100%;
-    max-width: 450px; 
-    position: relative;
-    background: white;
+    max-width: 450px; /* Standard mobile width */
+    margin: 0 auto;
+    background-color: #ffffff;
+    min-height: 100vh;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* CRITICAL FIX 1: Lock container to full viewport height */
-    height: 100vh !important; 
-    /* CRITICAL FIX 2: Set app-container to flex column for proper screen stretching */
-    display: flex !important;
-    flex-direction: column !important;
-    /* Hide any possible overflow from stacking */
-    overflow: hidden !important; 
-}
-body.dark-theme .app-container {
-    background: #121212;
-}
-.app-screen {
-    /* CRITICAL: Must be initially set to none when inactive (handled by JS/inline style) */
-    display: none; 
-    /* CRITICAL FIX 3: Allow active screen to fill remaining space (100% of app-container height) */
-    flex-grow: 1;
-    /* Use flex for internal layout flow */
-    display: flex !important; 
-    flex-direction: column; 
-    /* Ensure only the content inside the screen is scrollable, not the screen itself */
-    overflow-y: hidden;
-    /* Reset min-height to allow flex-grow to work */
-    min-height: 0; 
-}
-/* --- Shared Elements --- */
-.header-with-back, .app-header {
+    position: relative; /* Context for fixed elements */
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* ==================================== */
+/* DARK MODE STYLES */
+/* ==================================== */
+.dark-mode {
+    background-color: #1a1a2e; /* Dark theme background */
+    color: #ffffff;
+}
+
+.dark-mode .app-container {
+    background-color: #1e2740;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .input-group input,
+.dark-mode .input-group textarea {
+    background-color: #2b3a5b;
+    color: #ffffff;
+    border-color: #4a5c81;
+}
+
+/* ==================================== */
+/* SCREEN AND HEADER LAYOUT */
+/* ==================================== */
+.app-screen {
+    width: 100%;
+    flex-grow: 1; /* Allows screens to take up all available space */
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Allow content scrolling */
+}
+
+/* Header with back button */
+.header-with-back {
+    display: flex;
     align-items: center;
-    padding: 15px 20px;
-    background-color: white;
-    border-bottom: 1px solid #eee;
-    /* Ensure header does not scroll with content */
-    flex-shrink: 0; 
+    justify-content: space-between;
+    padding: 0 0 15px 0;
+    position: sticky;
+    top: 0;
+    background: inherit;
+    z-index: 10;
 }
-body.dark-theme .header-with-back, body.dark-theme .app-header {
-    background-color: #2c2c2c;
-    border-bottom: 1px solid #333;
-}
-.back-btn, .dark-mode-toggle {
+
+.back-btn {
     background: none;
     border: none;
-    font-size: 1.5em;
+    font-size: 24px;
     cursor: pointer;
-    color: var(--text-color);
+    color: inherit;
+    padding: 0 10px 0 0;
 }
+
 .screen-title-ml {
-    font-size: 1.3em;
-    font-weight: bold;
-    color: var(--text-color);
     flex-grow: 1;
+    text-align: left;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* ==================================== */
+/* LOGIN SCREEN STYLES */
+/* ==================================== */
+#login-screen {
+    justify-content: center;
+    align-items: center;
     text-align: center;
 }
+
+.content-box {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: auto; /* Pushes content to the top if flexed */
+}
+
 .author-image-placeholder {
     width: 100px;
     height: 100px;
+    background-color: #e67e22;
     border-radius: 50%;
-    margin: 0 auto 20px;
-    background-color: var(--primary-color);
+    margin: 0 auto 30px;
 }
-.author-icon-small { 
-    width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; background-color: #ccc;
+
+#main-title {
+    font-size: 24px;
+    margin: 0 0 5px;
 }
-.header-title { font-weight: bold; font-size: 1.1em; color: var(--text-color); }
-.header-subtitle { font-size: 0.8em; color: var(--secondary-text); }
-/* --- Input and Buttons --- */
-input, textarea {
+
+.subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group textarea {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid var(--border-color);
+    padding: 12px;
+    border: 1px solid #ccc;
     border-radius: 8px;
     box-sizing: border-box;
-    font-size: 1em;
-    transition: border-color 0.2s;
-    background-color: white;
-    color: var(--text-color);
-    margin-bottom: 10px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    color: #1e3a5a;
 }
-body.dark-theme input, body.dark-theme textarea {
-    background-color: #333;
+
+.phone-input {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f9f9f9;
 }
-input.error, textarea.error, .phone-input.error {
-    border: 2px solid var(--error-color) !important;
-    box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+
+.phone-input .country-code {
+    padding: 12px 10px;
+    background-color: #e9e9e9;
+    font-weight: 500;
+    color: #555;
+    border-right: 1px solid #ccc;
 }
-.continue-button, .buy-now-btn, .pay-now-btn {
+
+.phone-input input {
+    border: none;
+    flex-grow: 1;
+    padding: 12px;
+    background-color: transparent;
+}
+
+.language-selector {
+    display: flex;
+    border: 1px solid #e67e22;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.lang-button {
+    flex: 1;
+    padding: 12px 0;
+    border: none;
+    background-color: #ffffff;
+    color: #e67e22;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.lang-button:first-child {
+    border-right: 1px solid #e67e22;
+}
+
+.lang-button.active {
+    background-color: #e67e22;
+    color: #ffffff;
+}
+
+.continue-button {
     width: 100%;
     padding: 15px;
-    background-color: var(--primary-color);
-    color: white;
+    background-color: #e67e22;
+    color: #ffffff;
     border: none;
     border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 600;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 20px;
+    transition: background-color 0.2s;
 }
-.add-to-cart-btn { background: none; color: var(--text-color); border: 1px solid var(--border-color); padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; margin-top: 10px;}
-body.dark-theme .add-to-cart-btn { border-color: #444; }
-/* --- Login Screen --- */
-#login-screen {
-    /* Login screen should allow internal scrolling if its content exceeds the container height */
-    display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
-    background-color: white;
-    overflow-y: auto;
-    min-height: 100%;
-}
-body.dark-theme #login-screen { background-color: #121212; }
-.language-selector { display: flex; border: 1px solid var(--primary-color); border-radius: 8px; overflow: hidden; margin-bottom: 20px;}
-.lang-button { flex: 1; padding: 12px 0; border: none; background: white; color: var(--primary-color); font-weight: bold; }
-body.dark-theme .lang-button { background: #2c2c2c; }
-.lang-button.active { background-color: var(--primary-color); color: white; }
-.phone-input { display: flex; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; background-color: white; }
-body.dark-theme .phone-input { background-color: #333; }
-.country-code { padding: 12px 10px 12px 15px; color: var(--secondary-text); border-right: 1px solid var(--border-color); white-space: nowrap; }
-.phone-input input { border: none; flex-grow: 1; padding: 12px 15px; background-color: transparent; }
-/* --- Book List --- */
-.book-list-container { padding: 15px 20px 0; }
-.book-card { background: white; border-radius: 10px; margin-bottom: 20px; padding: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); position: relative; cursor: pointer; }
-body.dark-theme .book-card { background: #2c2c2c; }
-.book-cover { width: 100%; height: auto; border-radius: 8px; margin-bottom: 10px; }
-.price-tag { position: absolute; top: 25px; right: 25px; background-color: var(--light-bg); color: var(--primary-color); padding: 5px 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em; z-index: 10; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-/* --- Details & Actions --- */
-/* CRITICAL: Scrollable content wrappers with padding for fixed footers */
-.book-details-content,
-#cart-content {
-    flex-grow: 1;
-    overflow-y: auto; /* Enable scrolling for the content area */
-    /* Add padding for the fixed bottom action bar (120px = 60px nav + 60px action bar) */
-    padding-bottom: 120px; 
-}
-/* Apply padding to checkout screens that need footer offset */
-.checkout-sections {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding-bottom: 120px; 
-}
-/* Apply padding to profile screen */
-.profile-content {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding-bottom: 60px; /* Only needs offset for the nav bar */
-}
-.main-book-cover { width: 100%; display: block; max-height: 350px; object-fit: contain; }
-.preview-thumbnails { display: flex; padding: 10px 20px; gap: 10px; overflow-x: auto; background-color: white;}
-body.dark-theme .preview-thumbnails { background-color: #2c2c2c;}
-.thumbnail { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid transparent; }
-.thumbnail.active { border-color: var(--primary-color); }
-.book-metadata, .description-box { background-color: white; padding: 20px; margin-bottom: 10px; }
-body.dark-theme .book-metadata, body.dark-theme .description-box { background-color: #2c2c2c; }
-/* CRITICAL: Aligned and formatted fixed action bars */
-.bottom-actions-bar, .payment-footer { 
-    /* NOTE: These fixed elements must be children of the SCREEN they belong to (e.g., checkout-screen)
-       to be hidden when the screen is hidden. We fixed this in index.html. */
-    position: fixed; 
-    bottom: 60px; /* Position above the bottom nav bar */
-    left: 50%; /* Center the bar */
-    transform: translateX(-50%); 
-    width: 100%; 
-    max-width: 450px; 
-    background-color: white; 
-    padding: 15px 20px; 
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-    /* NEW: Flex settings for button alignment */
+
+/* ==================================== */
+/* HOME & BOOK DETAIL STYLES */
+/* ==================================== */
+
+.app-header {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
-    box-sizing: border-box; /* Crucial for proper width/padding calculation */
-    z-index: 90; /* Must be below the bottom-nav */
+    padding: 0 0 20px 0;
+    position: sticky;
+    top: 0;
+    background: inherit;
+    z-index: 10;
 }
-.bottom-actions-bar button {
-    flex: 1;
-    margin: 0 5px; /* Add space between buttons */
+
+.author-info {
+    display: flex;
+    align-items: center;
 }
-/* Ensure Buy Now button is always slightly offset from Add to Cart */
-.bottom-actions-bar .buy-now-btn {
+
+.author-icon-small {
+    width: 30px;
+    height: 30px;
+    background-color: #e67e22;
+    border-radius: 50%;
     margin-right: 10px;
 }
-.payment-footer {
-    /* Stack text and button vertically */
-    flex-direction: column;
-    align-items: flex-start;
+
+.header-title {
+    font-weight: 700;
+    font-size: 16px;
 }
-.payment-footer .pay-now-btn {
+
+.header-subtitle {
+    font-size: 12px;
+    color: #888;
+}
+
+.dark-mode-toggle {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: inherit;
+}
+
+/* Book List */
+.book-list-container h2 {
+    font-size: 22px;
     margin-top: 0;
+    margin-bottom: 5px;
 }
-body.dark-theme .bottom-actions-bar, body.dark-theme .payment-footer { 
-    background-color: #2c2c2c; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+
+.collection-subtitle {
+    color: #888;
+    margin-bottom: 20px;
 }
-/* --- Cart & Checkout --- */
-.cart-item-card { 
-    display: flex; flex-wrap: wrap; margin: 10px 20px; padding: 15px; border-radius: 10px; background: white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+.book-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    position: relative;
+    cursor: pointer;
 }
-body.dark-theme .cart-item-card, body.dark-theme .info-section { background: #2c2c2c; }
-.cart-item-card > div:nth-child(2) { flex-grow: 1; margin-left: 15px; }
-.cart-item-card img { width: 70px; height: 100px; object-fit: cover; border-radius: 5px; }
-.quantity-control-row { display: flex; align-items: center; width: 100%; margin-top: 15px; justify-content: space-between; }
-.quantity-selector { display: flex; border: 1px solid var(--border-color); border-radius: 5px; }
-.qty-btn { background: none; border: none; padding: 5px 10px; font-size: 1.2em; cursor: pointer; color: var(--primary-color); }
-.qty-count { padding: 5px 12px; border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); font-weight: bold; font-size: 1em; }
-.remove-btn { background: none; border: none; color: var(--error-color); font-size: 0.9em; cursor: pointer; }
-.total-summary-box, .info-section { 
-    background: white; padding: 15px 20px; margin: 10px 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+.dark-mode .book-card {
+    background-color: #2b3a5b;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.05);
 }
-.summary-row, .summary-total { display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2em; }
-.summary-total { border-top: 1px solid var(--border-color); margin-top: 10px; padding-top: 10px; }
-.info-section { margin-bottom: 20px; }
-.section-title-ml { font-size: 1.3em; font-weight: bold; margin-top: 0; margin-bottom: 15px;}
-#address-error, #pincode-error { color: var(--error-color); font-size: 0.8em; margin-top: -5px; display: none; }
-/* --- Thank You Screen --- */
-.thank-you-content { padding: 20px; text-align: center; }
-.success-icon { color: var(--success-color); font-size: 4em; margin-bottom: 10px; margin-top: 20px; }
-.order-number { font-weight: bold; color: var(--text-color); }
-.order-date { font-size: 0.9em; color: var(--secondary-text); }
-.thank-you-title { color: var(--text-color); }
-.thank-you-message { color: var(--secondary-text); margin-bottom: 30px; }
-/* --- Bottom Nav --- */
-.bottom-nav {
+
+.price-tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #3498db;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 0 10px 0 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.book-cover {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.book-details {
+    flex-grow: 1;
+}
+
+.book-title-ml {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.book-author {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.book-category {
+    font-size: 12px;
+    color: #e67e22;
+    padding: 2px 5px;
+    border: 1px solid #e67e22;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+/* Book Details Screen */
+.book-details-content {
+    padding-bottom: 80px; /* Space for fixed action bar */
+}
+
+.main-cover-area {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.main-book-cover {
+    width: 150px;
+    height: 225px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.preview-thumbnails {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.thumbnail {
+    width: 50px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.7;
+    transition: all 0.2s;
+}
+
+.thumbnail.active {
+    border-color: #e67e22;
+    opacity: 1;
+}
+
+.book-metadata {
+    text-align: center;
+}
+
+.book-metadata h1 {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.author-tag {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.price-row {
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
+.price-large {
+    font-size: 28px;
+    font-weight: 700;
+    color: #e67e22;
+    margin-right: 10px;
+}
+
+.format-small {
+    font-size: 14px;
+    color: #999;
+}
+
+.description-box {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.dark-mode .description-box {
+    background-color: #2b3a5b;
+}
+
+.description-text-ml {
+    line-height: 1.6;
+}
+
+.bottom-actions-bar {
     position: fixed;
-    bottom: 0;
+    bottom: 60px; /* Above the bottom navigation bar */
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
     max-width: 450px;
     display: flex;
+    gap: 10px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 20;
+}
+
+.dark-mode .bottom-actions-bar {
+    background-color: #1e2740;
+}
+
+.buy-now-btn, .add-to-cart-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.buy-now-btn {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+.add-to-cart-btn {
+    background-color: #f39c12;
+    color: #ffffff;
+}
+
+/* ==================================== */
+/* CART & CHECKOUT STYLES */
+/* ==================================== */
+
+/* Cart Item Card */
+.cart-item-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .cart-item-card {
+    background-color: #2b3a5b;
+}
+
+.cart-item-card img {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.quantity-control-row {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.qty-btn {
+    background-color: #e9e9e9;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.dark-mode .qty-btn {
+    background-color: #3e4e70;
+}
+
+.qty-count {
+    padding: 5px 10px;
+    font-weight: 600;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Cart Summary */
+.total-summary-box {
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.dark-mode .total-summary-box {
+    border-color: #4a5c81;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #ccc;
+}
+
+/* Cart Actions */
+.cart-actions {
+    padding-bottom: 70px; /* Space for fixed bottom nav */
+}
+
+.cart-actions .continue-button {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.continue-shopping-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #bdc3c7;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.dark-mode .continue-shopping-btn {
+    background-color: #4a5c81;
+    color: #fff;
+}
+
+
+/* Empty State */
+#cart-empty-state {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.empty-cart-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.empty-message-ml {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Checkout Page Specific Styles */
+#checkout-screen {
+    padding-bottom: 150px; /* Space for the fixed payment footer and nav */
+}
+
+.checkout-sections {
+    flex-grow: 1;
+}
+
+.info-section {
+    margin-bottom: 25px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+}
+
+.dark-mode .info-section {
+    border-color: #3e4e70;
+}
+
+.section-title-ml {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.input-label-ml {
+    display: block;
+    font-weight: 500;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#full-address, #pincode {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    color: #1e3a5a;
+}
+
+#pincode {
+    max-width: 150px;
+}
+
+#address-error, #pincode-error {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none; /* Hidden by default */
+}
+
+/* Order Summary */
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+}
+
+/* Payment Footer (Fixed element for Checkout screen ONLY) */
+.payment-footer {
+    position: fixed;
+    bottom: 60px; /* Sits just above the bottom navigation */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 450px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.15);
+    z-index: 20; /* Ensures it is on top of screen content */
+}
+
+.dark-mode .payment-footer {
+    background-color: #1e2740;
+}
+
+.pay-now-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #e67e22;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.secure-payment-note {
+    text-align: center;
+    font-size: 12px;
+    color: #7f8c8d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Thank You Screen */
+.thank-you-content {
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 70px; /* Space for bottom nav */
+}
+
+.success-icon {
+    font-size: 60px;
+    color: #27ae60;
+    margin-bottom: 15px;
+}
+
+.thank-you-title {
+    font-size: 28px;
+    margin-top: 0;
+}
+
+.thank-you-message {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.order-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: #3498db;
+    margin: 5px 0;
+}
+
+.order-date {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 30px;
+}
+
+/* ==================================== */
+/* FIXED BOTTOM NAVIGATION */
+/* ==================================== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 450px;
+    height: 60px;
+    display: flex;
     justify-content: space-around;
     align-items: center;
-    background-color: white;
-    height: 60px;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    border-top: 1px solid #eee;
-    z-index: 100;
+    background-color: #ffffff;
+    box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.1);
+    z-index: 30; /* Highest z-index */
 }
-body.dark-theme .bottom-nav {
-    background-color: #2c2c2c;
-    border-top: 1px solid #333;
+
+.dark-mode .bottom-nav {
+    background-color: #1e2740;
 }
-.nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5px; flex: 1; background: none; border: none; color: #888; font-size: 0.8em; cursor: pointer; position: relative; transition: color 0.2s; }
-body.dark-theme .nav-item { color: #aaa; }
-.nav-item.active { color: var(--primary-color); }
-.cart-badge { 
-    position: absolute; top: 5px; right: 30%; background-color: var(--error-color); color: white; border-radius: 50%; padding: 1px 5px; 
-    font-size: 0.7em; font-weight: bold; line-height: 1; min-width: 15px; text-align: center;
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 12px;
+    color: #7f8c8d;
+    transition: color 0.2s;
+    position: relative;
+}
+
+.nav-item.active {
+    color: #e67e22;
+}
+
+.nav-item .icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+}
+
+.cart-badge {
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 10px;
+    text-align: center;
+    line-height: 1;
+}
+
+/* ==================================== */
+/* 🚀 CRITICAL MPA OVERLAP FIX (The new rule) 🚀 */
+/* ==================================== */
+
+/* This rule adds clearance at the bottom of the Login screen content,
+   pushing the inputs up so they clear the fixed bottom navigation bar. */
+#login-screen .content-box {
+    padding-bottom: 70px;
 }
