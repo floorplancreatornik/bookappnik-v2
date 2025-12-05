@@ -2,13 +2,15 @@
 /* 1. GLOBAL RESET AND BASE STYLES */
 /* ==================================== */
 :root {
-    --primary-color: #e67e22; /* Orange */
-    --secondary-color: #f39c12; /* Lighter Orange */
+    /* Colors derived from your app screenshots */
+    --primary-color: #e67e22; /* Vibrant Orange/Yellow */
+    --secondary-color: #f39c12; 
     --text-color: #2c3e50; /* Dark Grey */
     --background-color: #ecf0f1; /* Light Grey/White */
     --input-bg-color: #ffffff;
     --border-color: #bdc3c7;
-    --success-color: #27ae60;
+    --success-color: #27ae60; /* Green for Success/Buy */
+    --cart-color: #3498db; /* Blue for Cart */
 }
 
 * {
@@ -44,16 +46,31 @@ body.dark-mode {
     --border-color: #5d6d7e;
 }
 
-body.dark-mode .app-header {
-    background-color: var(--text-color);
-    color: var(--background-color);
-}
+body.dark-mode .app-header,
 body.dark-mode .bottom-nav {
     background-color: #34495e;
 }
 body.dark-mode .nav-item {
-    color: #ecf0f1;
+    color: #bdc3c7;
 }
+body.dark-mode input[type="text"],
+body.dark-mode input[type="tel"],
+body.dark-mode input[type="number"],
+body.dark-mode textarea,
+body.dark-mode .lang-button {
+    color: var(--text-color);
+    border-color: #5d6d7e;
+}
+body.dark-mode .phone-input .country-code {
+    background-color: #34495e;
+    color: var(--text-color);
+}
+body.dark-mode .book-card,
+body.dark-mode .info-section {
+    background-color: #34495e;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
 
 /* ==================================== */
 /* 3. APP SCREENS & HEADER */
@@ -86,6 +103,9 @@ body.dark-mode .nav-item {
     border-radius: 50%;
     margin-right: 10px;
 }
+.header-title {
+    font-weight: 700;
+}
 .header-with-back {
     display: flex;
     justify-content: space-between;
@@ -110,6 +130,7 @@ body.dark-mode .nav-item {
     border: none;
     font-size: 20px;
     cursor: pointer;
+    color: var(--text-color);
 }
 
 /* ==================================== */
@@ -120,6 +141,8 @@ body.dark-mode .nav-item {
     align-items: center;
     text-align: center;
     padding: 50px 20px;
+    /* This ensures it takes full height when the nav is hidden */
+    min-height: 100vh; 
 }
 
 .author-image-placeholder {
@@ -310,7 +333,7 @@ textarea {
 .add-to-cart-btn {
     flex: 1;
     padding: 12px;
-    background-color: #3498db; /* Blue */
+    background-color: var(--cart-color); /* Blue */
     color: white;
     border: none;
     border-radius: 8px;
@@ -360,7 +383,6 @@ textarea {
     color: red;
     font-size: 0.8em;
     margin-top: 5px;
-    display: none; /* Controlled by JS */
 }
 
 /* Checkout Footer */
@@ -380,10 +402,6 @@ textarea {
     cursor: pointer;
     margin-bottom: 10px;
 }
-.secure-payment-note {
-    font-size: 0.9em;
-    color: #7f8c8d;
-}
 
 /* Thank You Screen */
 .thank-you-content {
@@ -393,23 +411,6 @@ textarea {
     align-items: center;
     text-align: center;
     padding: 30px 20px;
-}
-.success-icon {
-    font-size: 50px;
-    margin-bottom: 15px;
-}
-.thank-you-title {
-    color: var(--success-color);
-    margin-bottom: 10px;
-}
-.order-number {
-    font-weight: 600;
-    font-size: 1.1em;
-    color: var(--primary-color);
-}
-.order-date {
-    font-size: 0.9em;
-    color: #7f8c8d;
 }
 
 /* ==================================== */
@@ -457,7 +458,7 @@ textarea {
 .cart-badge {
     position: absolute;
     top: 0;
-    right: 50%; /* Center relative to icon */
+    right: 50%;
     transform: translate(20px, -5px);
     background-color: red;
     color: white;
@@ -468,20 +469,14 @@ textarea {
     text-align: center;
     line-height: 1.2;
     font-weight: bold;
-    display: none; /* Controlled by JS */
 }
 
-/* ==================================== */
-/* 🛑 CRITICAL HIDE NAV FIX (Must be at the very bottom) 🛑 */
-/* ==================================== */
-/* Ensure the main navigation bar is hidden by default. 
-   This prevents it from bleeding onto the login screen before JS runs. 
-   The JS showMainNavigationBar() will override this after login. */
-#main-bottom-nav {
-    display: none !important;
-}
-
-/* Ensures actions bar (like the one in book-details) doesn't appear on login screen */
+/* ================================================================= */
+/* 🛑 CRITICAL CSS HIDE FIX (Secondary Guardrail) 🛑 */
+/* This ensures the bottom actions bar is hidden on the login screen, 
+   even if the primary inline fix fails. */
+/* ================================================================= */
 #login-screen + .bottom-actions-bar {
     display: none !important;
 }
+/* Note: The main #main-bottom-nav hide is now handled by inline style in index.html */
