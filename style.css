@@ -46,7 +46,7 @@ body.dark-theme .app-container {
     background: #121212;
 }
 .app-screen {
-    /* CRITICAL: Must be initially set to none when inactive */
+    /* CRITICAL: Must be initially set to none when inactive (handled by JS/inline style) */
     display: none; 
     /* CRITICAL FIX 3: Allow active screen to fill remaining space (100% of app-container height) */
     flex-grow: 1;
@@ -135,11 +135,10 @@ input.error, textarea.error, .phone-input.error {
 body.dark-theme .add-to-cart-btn { border-color: #444; }
 /* --- Login Screen --- */
 #login-screen {
-    /* Set back to defaults for a non-scrolling screen that fills the container */
+    /* Login screen should allow internal scrolling if its content exceeds the container height */
     display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
     background-color: white;
     overflow-y: auto;
-    /* Ensure login screen scrolls if content is too large (unlike other screens) */
     min-height: 100%;
 }
 body.dark-theme #login-screen { background-color: #121212; }
@@ -187,6 +186,8 @@ body.dark-theme .preview-thumbnails { background-color: #2c2c2c;}
 body.dark-theme .book-metadata, body.dark-theme .description-box { background-color: #2c2c2c; }
 /* CRITICAL: Aligned and formatted fixed action bars */
 .bottom-actions-bar, .payment-footer { 
+    /* NOTE: These fixed elements must be children of the SCREEN they belong to (e.g., checkout-screen)
+       to be hidden when the screen is hidden. We fixed this in index.html. */
     position: fixed; 
     bottom: 60px; /* Position above the bottom nav bar */
     left: 50%; /* Center the bar */
