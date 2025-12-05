@@ -18,7 +18,7 @@ let cartDetails = {
 // --- Translations Map (Partial - Only required elements) ---
 const translations = {
     'en': {
-        'main-title': 'Welcome to BooksByNIK V8', // Keep V8 for now to ensure index.html update
+        'main-title': 'Welcome to BooksByNIK V8',
         'sub-title': 'Discover premium books directly from the author',
         'name-label': 'Your Name',
         'phone-label': 'Phone Number',
@@ -27,7 +27,7 @@ const translations = {
         'ഹോം': 'Home', 'കാർട്ട്': 'Cart', 'പ്രൊഫൈൽ': 'Profile'
     },
     'ml': {
-        'main-title': 'BooksByNIK-ലേക്ക് സ്വാഗതം V8', // Keep V8 for now to ensure index.html update
+        'main-title': 'BooksByNIK-ലേക്ക് സ്വാഗതം V8',
         'sub-title': 'എഴുത്തുകാരനിൽ നിന്ന് നേരിട്ട് പ്രീമിയം പുസ്തകങ്ങൾ കണ്ടെത്തുക',
         'name-label': 'നിങ്ങളുടെ പേര്',
         'phone-label': 'ഫോൺ നമ്പർ',
@@ -41,13 +41,12 @@ async function sendDataToAppScript(data) {
     try {
         const response = await fetch(APP_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors', // Required for App Script deployment (prevents CORS errors)
+            mode: 'no-cors', 
             cache: 'no-cache',
             headers: { 'Content-Type': 'application/json' },
             redirect: 'follow',
             body: JSON.stringify(data)
         });
-        // Since mode: 'no-cors' is used, response.ok status cannot be read reliably.
         console.log(`Data sent successfully to Sheet: ${data.type}`);
         return { result: "success" };
     } catch (error) {
@@ -55,17 +54,21 @@ async function sendDataToAppScript(data) {
         return { result: "error", message: error.toString() };
     }
 }
-// --- Core Navigation and UI Functions ---
+// ------------------------------------------------------------------
+// --- Core Navigation and UI Functions (FIXED showScreen below) ---
+// ------------------------------------------------------------------
 function showScreen(screenId, navElement = null) {
     document.querySelectorAll('.app-screen').forEach(screen => {
         screen.style.display = 'none';
     });
 
-    document.getElementById(screenId).style.display = 'flex'; // Use flex for login screen centering
-    if (screenId !== 'login-screen') {
-        document.getElementById(screenId).style.display = 'block'; // Use block for scrolling screens
+    // CRITICAL FIX: Ensure screens use 'block' for scrolling or 'flex' for centering
+    if (screenId === 'login-screen') {
+        document.getElementById(screenId).style.display = 'flex'; 
+    } else {
+        document.getElementById(screenId).style.display = 'block'; 
     }
-
+    
     document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
         item.classList.remove('active');
     });
@@ -84,9 +87,8 @@ function showScreen(screenId, navElement = null) {
     if (screenId === 'login-screen' || screenId === 'checkout-screen' || screenId === 'thank-you-screen') {
         bottomNav.style.display = 'none';
     } else {
-        bottomNav.style.display = 'flex';
+        bottomNav.style.display = 'flex'; 
     }
-
 
     if (screenId === 'cart-screen') updateCartScreen();
     if (screenId === 'checkout-screen') prefillCheckout();
@@ -169,7 +171,9 @@ function removeFromCart() {
 
 function updateCartScreen() {
     const emptyState = document.getElementById('cart-empty-state');
-    const filledState = document.getElementById('cart-filled-state');
+    const filledState = document.getElementById('cart-filled-state'); 
+    
+    // NOTE: If cart is still blank, these IDs in index.html may need verification.
     if (cartDetails.quantity > 0) {
         // Update filled cart details
         document.getElementById('item-quantity').textContent = cartDetails.quantity;
@@ -203,9 +207,9 @@ function prefillCheckout() {
     document.getElementById('checkout-total-price').textContent = `₹${cartDetails.total}`;
 }
 
-// =========================================================
-// !!! CRITICAL MISSING FUNCTIONS ADDED HERE !!!
-// =========================================================
+// ------------------------------------------------------------------
+// --- Missing Functions for Book Details Screen (Restored) ---
+// ------------------------------------------------------------------
 
 function showBookDetails(title, price, category, bookCode) {
     // 1. Update the cart details object with the selected book
@@ -220,14 +224,12 @@ function showBookDetails(title, price, category, bookCode) {
     
     // 3. Set the image sources
     const mainCover = document.getElementById('main-book-cover');
-    // Using the placeholder-main image from the HTML structure
     mainCover.src = `images/placeholder-main.png`; 
 
     // 4. Reset thumbnail selection
     document.querySelectorAll('.preview-thumbnails .thumbnail').forEach(thumb => {
         thumb.classList.remove('active');
     });
-    // The first thumbnail should be marked active
     document.querySelector('.preview-thumbnails .thumbnail').classList.add('active');
 
     // 5. Navigate to the screen
@@ -248,9 +250,9 @@ function swapImage(thumbnail) {
     thumbnail.classList.add('active');
 }
 
-// =========================================================
+// ------------------------------------------------------------------
 // --- Event Listeners and Validation ---
-// =========================================================
+// ------------------------------------------------------------------
 
 // Login screen validation and App Script log (type: user_login)
 document.getElementById('continue-btn').addEventListener('click', async () => {
@@ -277,7 +279,7 @@ document.getElementById('continue-btn').addEventListener('click', async () => {
         const loginData = {
             type: 'user_login', 
             name: nameInput.value.trim(),
-            phone: '+91 ' + phoneValue, // Sending full phone number
+            phone: '+91 ' + phoneValue, 
             language: currentLang 
         };
         
