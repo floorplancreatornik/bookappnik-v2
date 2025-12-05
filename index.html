@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BooksByNIK App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app-container">
+
+    <div id="login-screen" class="app-screen">
+        <div class="content-box">
+            <div class="author-image-placeholder"></div>
+            <h1 id="main-title">Welcome to BooksByNIK</h1>
+            <p class="subtitle" id="sub-title">Discover premium books directly from the author</p>
+            
+            <div class="input-group">
+                <label id="lang-label">Choose Language</label>
+                <div class="language-selector">
+                    <button class="lang-button active" id="lang-en" data-lang="en">English</button>
+                    <button class="lang-button" id="lang-ml" data-lang="ml">മലയാളം</button>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="name" id="name-label">Your Name</label>
+                <input type="text" id="name" placeholder="Enter your full name">
+            </div>
+            
+            <div class="input-group">
+                <label for="phone" id="phone-label">Phone Number</label>
+                <div class="phone-input" id="phone-input-group">
+                    <span class="country-code">+91</span>
+                    <input type="tel" id="phone" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric">
+                </div>
+            </div>
+            
+            <button class="continue-button" id="continue-btn">Continue</button>
+        </div>
+    </div>
+
+    <div id="home-screen" class="app-screen">
+        <header class="app-header">
+            <div class="author-info">
+                <div class="author-icon-small"></div>
+                <div>
+                    <div class="header-title">BooksByNIK</div>
+                    <div class="header-subtitle" id="home-author-tag">രചന: NIK</div>
+                </div>
+            </div>
+            <button class="dark-mode-toggle">🌙</button>
+        </header>
+
+        <div class="book-list-container">
+            <h2 id="all-books-title">എല്ലാ പുസ്തകങ്ങളും</h2>
+            <p class="collection-subtitle" id="browse-collection">ഞങ്ങളുടെ ശേഖരം ബ്രൗസ് ചെയ്യുക</p>
+            
+            <div class="book-card" onclick="showBookDetails('ഹൃദയത്തിന്റെ മന്ത്രണങ്ങൾ', 299, 'Poetry', 'WOH001')">
+                <div class="price-tag">₹299</div>
+                <img src="https://via.placeholder.com/350x450/333333/FFFFFF?text=Book+Cover" alt="Book Cover" class="book-cover">
+                <div class="book-details">
+                    <div class="book-title-ml">ഹൃദയത്തിന്റെ മന്ത്രണങ്ങൾ</div>
+                    <div class="book-author">രചന NIK</div>
+                    <div class="book-category">Poetry</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="book-details-screen" class="app-screen">
+        <div class="header-with-back">
+            <button class="back-btn" onclick="showScreen('home')">←</button>
+            <h2 class="screen-title-ml">പുസ്തക വിഭാഗങ്ങൾ</h2>
+            <button class="dark-mode-toggle">🌙</button>
+        </div>
+
+        <div class="book-details-content">
+            <div class="main-cover-area">
+                <img src="https://via.placeholder.com/400x500/333333/FFFFFF?text=Main+Cover" alt="Main Book Cover" id="main-book-cover" class="main-book-cover">
+            </div>
+            
+            <div class="preview-thumbnails">
+                <img src="https://via.placeholder.com/80/333333?text=C1" data-full-src="https://via.placeholder.com/400x500/333333/FFFFFF?text=Main+Cover" class="thumbnail active" onclick="swapImage(this)">
+                <img src="https://via.placeholder.com/80/e74c3c?text=P1" data-full-src="https://via.placeholder.com/400x500/e74c3c/FFFFFF?text=Preview+1" class="thumbnail" onclick="swapImage(this)">
+                <img src="https://via.placeholder.com/80/27ae60?text=P2" data-full-src="https://via.placeholder.com/400x500/27ae60/FFFFFF?text=Preview+2" class="thumbnail" onclick="swapImage(this)">
+            </div>
+
+            <div class="book-metadata">
+                <h1 class="book-title-ml" id="detail-title">ഹൃദയത്തിന്റെ മന്ത്രണങ്ങൾ</h1>
+                <p class="author-tag">രചന NIK</p>
+                <span class="category-tag" id="detail-category">Poetry</span>
+                <div class="price-row">
+                    <span class="price-large" id="detail-price">₹299</span>
+                    <span class="format-small">(Paperback)</span>
+                </div>
+            </div>
+
+            <div class="description-box">
+                <p class="description-text-ml">
+                    മനുഷ്യ വികാരങ്ങളുടേയും... (Description placeholder)
+                </p>
+            </div>
+        </div>
+
+        <div class="bottom-actions-bar">
+            <button class="buy-now-btn" onclick="buyNow()">ഇപ്പോൾ വാങ്ങുക</button>
+            <button class="add-to-cart-btn" id="add-to-cart-btn" onclick="addToCart()">
+                🛒 കാർട്ടിലേക്ക് ചേർക്കുക
+            </button>
+        </div>
+    </div>
+
+    <div id="cart-screen" class="app-screen">
+        <div class="header-with-back">
+            <button class="back-btn" onclick="showScreen('home')">←</button>
+            <h2 class="screen-title-ml">നിങ്ങളുടെ കാർട്ട്</h2>
+            <button class="dark-mode-toggle">🌙</button>
+        </div>
+
+        <div id="cart-content">
+            <div id="cart-filled-state">
+                <div class="cart-item-card">
+                    <img src="https://via.placeholder.com/70x100/333333/FFFFFF?text=Book" alt="Book Cover">
+                    <div>
+                         <div>ഹൃദയത്തിന്റെ മന്ത്രണങ്ങൾ</div>
+                         <div>രചന NIK</div>
+                         <div>₹299</div>
+                    </div>
+
+                    <div class="quantity-control-row">
+                        <span>എണ്ണം:</span>
+                        <div class="quantity-selector">
+                            <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                            <span class="qty-count" id="item-quantity">1</span>
+                            <button class="qty-btn" onclick="updateQty(1)">+</button>
+                        </div>
+                        <button class="remove-btn" onclick="removeFromCart()">🗑️ നീക്കം ചെയ്യുക</button>
+                    </div>
+                </div>
+
+                <div class="total-summary-box">
+                    <div class="summary-row">
+                        <span class="summary-label">ആകെ തുക</span>
+                        <span class="summary-amount" id="total-amount">₹299</span>
+                    </div>
+                </div>
+                <div class="cart-actions">
+                    <button class="checkout-btn continue-button" onclick="showScreen('checkout')">
+                        🛒 ചെക്ക്ഔട്ടിലേക്ക് പോകുക
+                    </button>
+                    <button class="continue-shopping-btn add-to-cart-btn" onclick="showScreen('home')">
+                        ഷോപ്പിംഗ് തുടരുക
+                    </button>
+                </div>
+            </div>
+
+            <div id="cart-empty-state">
+                <div class="empty-state">
+                    <div class="empty-cart-icon">🛒</div>
+                    <p class="empty-message-ml">നിങ്ങളുടെ കാർട്ട് ശൂന്യമാണ്: ഞങ്ങളുടെ ശേഖരം പരിശോധിക്കുക!</p>
+                    <button class="continue-button" onclick="showScreen('home')">
+                         പുസ്തകങ്ങൾ ബ്രൗസ് ചെയ്യുക
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkout-screen" class="app-screen">
+        <div class="header-with-back">
+            <button class="back-btn" onclick="showScreen('cart')">←</button>
+            <h2 class="screen-title-ml">ചെക്ക്ഔട്ട്</h2>
+            <button class="dark-mode-toggle">🌙</button>
+        </div>
+
+        <div class="checkout-sections">
+            <section class="info-section">
+                <h3 class="section-title-ml">🧍 നിങ്ങളുടെ വിവരങ്ങൾ</h3>
+                <label class="input-label-ml">മുഴുവൻ പേര്</label>
+                <input type="text" id="checkout-name" value="" readonly>
+                
+                <label class="input-label-ml">ഫോൺ നമ്പർ</label>
+                <input type="tel" id="checkout-phone" value="" readonly>
+            </section>
+
+            <section class="info-section">
+                <h3 class="section-title-ml">🏠 ഡെലിവറി വിലാസം</h3>
+                <label class="input-label-ml">പൂർണ്ണ വിലാസം</label>
+                <textarea id="full-address" placeholder="വീട്/ഫ്ലാറ്റ് നമ്പർ, തെരുവ്, ഏരിയ, നഗരം, സംസ്ഥാനം"></textarea>
+                <p id="address-error">Please enter a complete address</p>
+                
+                <label class="input-label-ml">പിൻകോഡ്</label>
+                <input type="number" id="pincode" placeholder="6 അക്ക പിൻകോഡ്" maxlength="6" inputmode="numeric">
+                <p id="pincode-error">Enter a valid 6-digit pincode</p>
+            </section>
+
+            <section class="info-section">
+                <h3 class="section-title-ml">📦 ഓർഡർ സംഗ്രഹം</h3>
+                <div class="summary-line">
+                    <span>ഹൃദയത്തിന്റെ മന്ത്രണങ്ങൾ (എണ്ണം: <span id="checkout-qty">1</span>)</span>
+                    <span id="checkout-price">₹299</span>
+                </div>
+                <div class="summary-total">
+                    <span>ആകെ</span>
+                    <span id="checkout-total-price">₹299</span>
+                </div>
+            </section>
+        </div>
+
+        <div class="payment-footer">
+            <button class="pay-now-btn" id="pay-now-btn">
+                💳 ഇപ്പോൾ പണം നൽകുക
+            </button>
+            <p class="secure-payment-note">
+                🛡️ UPI വഴി സുരക്ഷിത പേയ്മെന്റ്
+            </p>
+        </div>
+    </div>
+
+    <div id="profile-screen" class="app-screen">
+        <div class="header-with-back">
+            <button class="back-btn" onclick="showScreen('home')">←</button>
+            <h2 class="screen-title-ml">പ്രൊഫൈൽ</h2>
+            <button class="dark-mode-toggle">🌙</button>
+        </div>
+        <div class="profile-content">
+             </div>
+    </div>
+    
+    <div id="thank-you-screen" class="app-screen">
+        <div class="header-with-back">
+            <h2 class="screen-title-ml">ഓർഡർ വിശദാംശങ്ങൾ</h2>
+            <button class="dark-mode-toggle">🌙</button>
+        </div>
+        
+        <div class="thank-you-content">
+            <div class="success-icon">✅</div>
+            <h1 class="thank-you-title">നന്ദി!</h1>
+            <p class="thank-you-message">നിങ്ങളുടെ ഓർഡർ വിജയകരമായി സമർപ്പിച്ചു</p>
+
+            <div class="info-section">
+                <h3 class="section-title-ml">ഓർഡർ നമ്പർ</h3>
+                <p class="order-number">ORD-1764923956267</p>
+                <p class="order-date">⏲️ 2025, ഡിസംബർ 5 02:09 PM</p>
+            </div>
+            
+            <button class="continue-button" onclick="showScreen('home')">
+                കൂടുതൽ പുസ്തകങ്ങൾ ബ്രൗസ് ചെയ്യുക
+            </button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-target="home" onclick="showScreen('home', this)">
+            <span class="icon">🏠</span>
+            <span data-ml="ഹോം">ഹോം</span>
+        </button>
+        <button class="nav-item cart-item" data-target="cart" onclick="showScreen('cart', this)">
+            <span class="icon">🛒</span>
+            <span class="cart-badge" id="cart-count">0</span>
+            <span data-ml="കാർട്ട്">കാർട്ട്</span>
+        </button>
+        <button class="nav-item" data-target="profile" onclick="showScreen('profile', this)">
+            <span class="icon">👤</span>
+            <span data-ml="പ്രൊഫൈൽ">പ്രൊഫൈൽ</span>
+        </button>
+    </nav>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
