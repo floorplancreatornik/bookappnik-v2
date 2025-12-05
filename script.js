@@ -5,30 +5,55 @@ let userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
 const MAIN_NAV_ID = 'main-bottom-nav';
 
 // =================================================================
-// 0. GLOBAL PLACEHOLDER FUNCTIONS (FIXES INLINE ONCLICK ERRORS)
-// These must be defined globally so the HTML can reference them immediately.
+// 0. GLOBAL PLACEHOLDER FUNCTIONS (Accessible from index.html inline 'onclick')
 // =================================================================
-
 function showBookDetails(title, price, category, id) { 
-    // This function must exist globally to be called from the Home screen's onclick
-    // alert(`Attempting to view details for: ${title}`);
-    showScreen('book-details'); // Placeholder logic
+    // Calls showScreen (now globally defined in Section 1)
+    showScreen('book-details'); 
 }
-
 function addToCart() { 
-    // This must exist globally for the Book Details screen's button to work
-    // alert('Book added to cart!');
+    // Placeholder - implementation needed later
 }
-
 function buyNow() {
-    // This must exist globally for the Book Details screen's button to work
-    // alert('Buying now!');
+    // Placeholder - implementation needed later
 }
 
 
 // =================================================================
-// 1. SHARED/GLOBAL FUNCTIONS (Run on both index.html and checkout.html)
+// 1. SHARED/GLOBAL FUNCTIONS (Core utilities available everywhere)
 // =================================================================
+
+// Function to show/hide the main bottom navigation bar
+function showMainNavigationBar() {
+    const navBar = document.getElementById(MAIN_NAV_ID);
+    if (navBar) {
+        navBar.style.display = 'flex';
+    }
+}
+
+// Function to switch between app screens 
+function showScreen(targetId, navButton = null) {
+    const screens = document.querySelectorAll('.app-screen');
+    screens.forEach(screen => {
+        screen.style.display = 'none';
+    });
+    const targetScreen = document.getElementById(targetId + '-screen');
+    if (targetScreen) {
+        // Use 'flex' since most screens are display: flex in the CSS
+        targetScreen.style.display = 'flex'; 
+    }
+    
+    // Update navigation bar active state
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    if (navButton) {
+        navButton.classList.add('active');
+    } else if (['home', 'cart', 'profile'].includes(targetId)) {
+        const targetNav = document.querySelector(`.bottom-nav .nav-item[data-target="${targetId}"]`);
+        if (targetNav) targetNav.classList.add('active');
+    }
+}
 
 function updateCartCount() {
     const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -52,57 +77,26 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.dark-mode-toggle').forEach(button => {
         button.addEventListener('click', toggleDarkMode);
     });
-    updateCartCount();
+    updateCartCount(); 
 });
 
 
 // =================================================================
 // 2. MAIN APPLICATION LOGIC (Only runs when index.html is loaded)
 // =================================================================
-
 const pathname = window.location.pathname;
 
+// Check if the current page is index.html or the root path
 if (pathname.includes('index.html') || pathname === '/') {
     
     // --- Index-Specific Functions ---
     
-    function showMainNavigationBar() {
-        const navBar = document.getElementById(MAIN_NAV_ID);
-        if (navBar) {
-            navBar.style.display = 'flex';
-        }
-    }
-
-    function showScreen(targetId, navButton = null) {
-        const screens = document.querySelectorAll('.app-screen');
-        screens.forEach(screen => {
-            screen.style.display = 'none';
-        });
-        const targetScreen = document.getElementById(targetId + '-screen');
-        if (targetScreen) {
-            targetScreen.style.display = 'flex';
-        }
-        
-        // Update navigation bar active state
-        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        if (navButton) {
-            navButton.classList.add('active');
-        } else if (['home', 'cart', 'profile'].includes(targetId)) {
-            const targetNav = document.querySelector(`.bottom-nav .nav-item[data-target="${targetId}"]`);
-            if (targetNav) targetNav.classList.add('active');
-        }
-    }
-
     function switchLanguage(lang) {
         currentLanguage = lang;
         localStorage.setItem('language', lang);
         document.querySelectorAll('.lang-button').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`lang-${lang}`).classList.add('active');
         // --- (Add full language translation logic here) ---
-        // For testing, alert the language change
-        // alert(`Language set to ${lang}`); 
     }
 
     function handleContinueBtn() {
@@ -116,6 +110,7 @@ if (pathname.includes('index.html') || pathname === '/') {
 
         userInfo = { name: nameInput, phone: phoneInput };
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        // Use global functions: showScreen and showMainNavigationBar
         showScreen('home');
         showMainNavigationBar(); 
     }
@@ -137,7 +132,6 @@ if (pathname.includes('index.html') || pathname === '/') {
     // --- Event Listeners for index.html ---
     document.addEventListener('DOMContentLoaded', () => {
         
-        // This is the first main function called after the DOM is ready
         loadInitialState();
         
         // ACTIVATE LANGUAGE AND CONTINUE BUTTONS
@@ -146,26 +140,21 @@ if (pathname.includes('index.html') || pathname === '/') {
         const continueBtn = document.getElementById('continue-btn'); 
 
         if (langEnBtn) {
-             // You can add a console log here to verify this runs: console.log('Attached EN listener');
              langEnBtn.addEventListener('click', () => switchLanguage('en'));
         }
         if (langMlBtn) {
-             // console.log('Attached ML listener');
              langMlBtn.addEventListener('click', () => switchLanguage('ml'));
         }
         
         if (continueBtn) {
-            // console.log('Attached Continue listener');
             continueBtn.addEventListener('click', handleContinueBtn);
         }
     });
-
 }
-
 // =================================================================
 // 3. CHECKOUT LOGIC (Only runs when checkout.html is loaded)
 // =================================================================
 else if (pathname.includes('checkout.html')) {
     
-    // ... (rest of your checkout.html logic) ...
+    // ... (rest of your checkout.html logic, which would be added here) ...
 }
