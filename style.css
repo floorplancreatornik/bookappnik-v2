@@ -141,7 +141,6 @@ body.dark-mode .info-section {
     align-items: center;
     text-align: center;
     padding: 50px 20px;
-    /* This ensures it takes full height when the nav is hidden */
     min-height: 100vh; 
 }
 
@@ -472,11 +471,15 @@ textarea {
 }
 
 /* ================================================================= */
-/* 🛑 CRITICAL CSS HIDE FIX (Secondary Guardrail) 🛑 */
-/* This ensures the bottom actions bar is hidden on the login screen, 
-   even if the primary inline fix fails. */
+/* 🛑 CRITICAL HIDE NAV FIX (Guarantees the nav is hidden initially) 🛑 */
 /* ================================================================= */
+
+/* 1. Forces the main navigation bar to be hidden by default. */
+#main-bottom-nav {
+    display: none !important;
+}
+
+/* 2. Ensures the action bar (like Buy/Add to Cart) is also hidden on the login screen. */
 #login-screen + .bottom-actions-bar {
     display: none !important;
 }
-/* Note: The main #main-bottom-nav hide is now handled by inline style in index.html */
