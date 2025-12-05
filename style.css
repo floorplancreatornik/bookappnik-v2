@@ -821,11 +821,11 @@ body {
 }
 
 /* ==================================== */
-/* 🚀 CRITICAL MPA OVERLAP FIX (The new rule) 🚀 */
+/* 🚀 CRITICAL MPA OVERLAP FIX (The final rule) 🚀 */
 /* ==================================== */
 
-/* This rule adds clearance at the bottom of the Login screen content,
-   pushing the inputs up so they clear the fixed bottom navigation bar. */
+/* This rule adds sufficient padding to the Login screen content (content-box)
+   to clear both the 'bottom-nav' (60px) and the 'bottom-actions-bar' (60px + gap). */
 #login-screen .content-box {
-    padding-bottom: 70px;
+    padding-bottom: 130px;
 }
