@@ -1,195 +1,274 @@
-// Global variables needed across both pages (user/cart data, language)
-let currentLanguage = 'ml';
-let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-let userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-const MAIN_NAV_ID = 'main-bottom-nav';
+// =======================================================
+// 1. GLOBAL STATE AND HELPER FUNCTIONS
+// =======================================================
 
-// =================================================================
-// 0. GLOBAL PLACEHOLDER/UTILITY FUNCTIONS (Available everywhere via inline onclick)
-// =================================================================
-function showBookDetails(title, price, category, id) { 
-    // This is called from index.html -> book-card
-    showScreen('book-details'); 
+const APP_SCREENS = ['home-screen', 'cart-screen', 'profile-screen', 'book-details-screen', 'checkout-screen', 'thank-you-screen'];
+
+// Data structure to simulate cart items
+let cart = JSON.parse(localStorage.getItem('cart')) || []; 
+let bookData = [
+    {id: 'WOH001', title: 'ഹൃദയത്തിന്റെ മന്ത്രണങ്ങൾ', price: 299, author: 'NIK', category: 'Poetry', lang: 'ml'},
+    // Add more book objects here as needed
+];
+
+// Helper to get the current page name
+function getCurrentPage() {
+    const path = window.location.pathname;
+    if (path.includes('checkout.html')) return 'checkout';
+    if (path.includes('home.html')) return 'home';
+    return 'index'; // Default is index.html
 }
-function addToCart() { 
-    // Placeholder for actual cart logic
-    alert('Item added to cart!');
-    // Recalculate cart count and update badge
-    updateCartCount(); 
+
+// =======================================================
+// 2. INDEX.HTML (Login/Redirect Logic)
+// =======================================================
+
+function validateAndRedirect() {
+    if (getCurrentPage() !== 'index') return; // Only run on index.html
+    
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+
+    if (name.trim() === "" || phone.length !== 10) {
+        alert("Please enter a valid name and a 10-digit phone number.");
+        return;
+    }
+
+    // 1. Store user data
+    localStorage.setItem('userName', name);
+    localStorage.setItem('userPhone', phone);
+    localStorage.setItem('isLoggedIn', 'true');
+
+    // 2. Redirect to the main app page
+    window.location.href = 'home.html';
 }
+
+function handleIndexInit() {
+    if (getCurrentPage() === 'index' && localStorage.getItem('isLoggedIn') === 'true') {
+        // Auto-redirect if already logged in
+        window.location.href = 'home.html';
+    }
+
+    // Language toggle for visual effect (only on index)
+    document.querySelectorAll('.lang-button').forEach(button => {
+        button.addEventListener('click', function() {
+            document.querySelectorAll('.lang-button').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+}
+
+// =======================================================
+// 3. HOME.HTML (Internal Navigation and Cart Management)
+// =======================================================
+
+// Function to handle internal screen switching within home.html
+function showScreen(screenId, navElement = null) {
+    if (getCurrentPage() !== 'home') return; 
+
+    // Hide all screens
+    APP_SCREENS.forEach(id => {
+        const screen = document.getElementById(id);
+        if (screen) screen.style.display = 'none';
+    });
+    
+    // Show the target screen
+    const targetScreen = document.getElementById(screenId);
+    if (targetScreen) targetScreen.style.display = 'flex'; // Use flex for layout
+
+    // Update bottom nav active state
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    if (navElement) {
+        navElement.classList.add('active');
+        // Hide bottom-actions-bar when navigating to main screens
+        document.querySelector('.bottom-actions-bar').style.display = 'none';
+    }
+
+    // Special handling for the details screen to show the action bar
+    if (screenId === 'book-details-screen') {
+        document.querySelector('.bottom-actions-bar').style.display = 'flex';
+    }
+
+    // Update cart screen data if navigating to it
+    if (screenId === 'cart-screen') {
+        renderCart();
+    }
+}
+
+function showBookDetails(title, price, category, id) {
+    if (getCurrentPage() !== 'home') return;
+
+    // Logic to render the book details goes here
+    const detailsContent = document.querySelector('.book-details-content');
+    detailsContent.innerHTML = `
+        <img src="images/placeholder.png" alt="Book Cover" style="width: 100%; height: auto; border-radius: 8px;">
+        <h3 style="margin-top: 15px;">${title}</h3>
+        <p>Author: NIK</p>
+        <p>Category: ${category}</p>
+        <p style="font-size: 1.5em; font-weight: bold; color: var(--primary-color);">Price: ₹${price}</p>
+        <p style="margin-top: 15px;">Detailed description of the book goes here...</p>
+    `;
+    // Hide the main nav bar when showing details (it will reappear when returning home)
+    document.getElementById('main-bottom-nav').style.display = 'none'; 
+    showScreen('book-details-screen');
+}
+
+function addToCart() {
+    if (getCurrentPage() !== 'home') return;
+    
+    // Simple mock logic: get the current book from the details screen
+    const bookTitle = document.querySelector('.book-details-content h3').innerText;
+    const existingItem = cart.find(item => item.title === bookTitle);
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        const book = bookData.find(b => b.title === bookTitle);
+        if (book) {
+            cart.push({...book, quantity: 1});
+        }
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartBadge();
+    alert(`${bookTitle} added to cart!`);
+}
+
+function updateCartBadge() {
+    if (getCurrentPage() === 'home') {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const badge = document.getElementById('cart-count');
+        if (badge) {
+            badge.innerText = totalItems;
+            badge.style.display = totalItems > 0 ? 'block' : 'none';
+        }
+    }
+}
+
+function renderCart() {
+    // Renders cart items on cart-screen (implementation omitted for brevity)
+}
+
 function buyNow() {
-    // Navigates directly to the checkout page
-    location.href = 'checkout.html';
-}
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-}
-if (localStorage.getItem('darkMode') === 'true') {
-    document.body.classList.add('dark-mode');
+    // Clear cart and add only the current book, then redirect to checkout.html
+    alert("Buy Now clicked! Redirecting to checkout.");
+    // Implementation needed here
+    window.location.href = 'checkout.html';
 }
 
-
-// =================================================================
-// 1. SHARED/GLOBAL FUNCTIONS (Core screen/state management utilities)
-// =================================================================
-
-// Function to show/hide the main bottom navigation bar
-function showMainNavigationBar() {
-    const navBar = document.getElementById(MAIN_NAV_ID);
-    if (navBar) {
-        // Overrides the CSS 'display: none !important' when needed
-        navBar.style.display = 'flex'; 
-    }
-}
-
-// Function to switch between app screens 
-function showScreen(targetId, navButton = null) {
-    const screens = document.querySelectorAll('.app-screen');
-    screens.forEach(screen => {
-        screen.style.display = 'none';
-    });
-    const targetScreen = document.getElementById(targetId + '-screen');
-    if (targetScreen) {
-        targetScreen.style.display = 'flex'; 
+function handleHomeInit() {
+    if (getCurrentPage() !== 'home') return;
+    
+    // Check if user is logged in, if not, redirect to index.html
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+        window.location.href = 'index.html';
+        return;
     }
     
-    // Update navigation bar active state
-    document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    // Set active class on the relevant nav item
-    if (navButton) {
-        navButton.classList.add('active');
-    } else if (['home', 'cart', 'profile'].includes(targetId)) {
-        const targetNav = document.querySelector(`.bottom-nav .nav-item[data-target="${targetId}"]`);
-        if (targetNav) targetNav.classList.add('active');
-    }
-}
+    // Initial setup: Show the home screen and hide others
+    showScreen('home-screen', document.querySelector('.nav-item[data-target="home"]'));
+    document.getElementById('main-bottom-nav').style.display = 'flex'; // Ensure nav is visible on the home page
+    document.querySelector('.bottom-actions-bar').style.display = 'none'; 
+    updateCartBadge();
 
-function updateCartCount() {
-    // For demonstration, let's assume 1 item is always in cart after successful login
-    const totalQty = 1; // cart.reduce((sum, item) => sum + item.quantity, 0); 
-    const cartCountElements = document.querySelectorAll('#cart-count');
-    cartCountElements.forEach(el => {
-        el.textContent = totalQty;
-        el.style.display = totalQty > 0 ? 'block' : 'none';
+    // Dark mode toggle listener
+    document.querySelector('.dark-mode-toggle').addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
     });
 }
 
+// =======================================================
+// 4. CHECKOUT.HTML (Validation and Payment Logic)
+// =======================================================
 
-// =================================================================
-// 2. MAIN APPLICATION LOGIC (index.html: Login, Home, Cart, Profile)
-// =================================================================
-const pathname = window.location.pathname;
-
-if (pathname.includes('index.html') || pathname === '/') {
-    
-    function switchLanguage(lang) {
-        currentLanguage = lang;
-        localStorage.setItem('language', lang);
-        document.querySelectorAll('.lang-button').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`lang-${lang}`).classList.add('active');
-        // --- (Full language translation logic would go here) ---
-    }
-
-    function handleContinueBtn() {
-        const nameInput = document.getElementById('name').value.trim();
-        const phoneInput = document.getElementById('phone').value.trim();
-
-        if (nameInput === "" || phoneInput.length !== 10 || isNaN(phoneInput)) {
-            alert("ദയവായി സാധുവായ പേരും 10 അക്ക ഫോൺ നമ്പറും നൽകുക.");
-            return;
-        }
-
-        userInfo = { name: nameInput, phone: phoneInput };
-        localStorage.setItem('userInfo', JSON.stringify(userInfo));
-        
-        // Success: Show home screen and navigation
-        showScreen('home');
-        showMainNavigationBar(); 
-    }
-
-    function loadInitialState() {
-        // 1. Check for language preference
-        currentLanguage = localStorage.getItem('language') || 'ml';
-        switchLanguage(currentLanguage);
-
-        // 2. Check for user login info
-        if (userInfo && userInfo.name && userInfo.phone) {
-            // Logged in: Go straight to home and show nav
-            showScreen('home');
-            showMainNavigationBar(); 
-        } else {
-            // Not logged in: Show login screen
-            showScreen('login');
-        }
-        
-        // 3. Handle query parameter screen changes (e.g., from cart/checkout links)
-        const params = new URLSearchParams(window.location.search);
-        const targetScreen = params.get('screen');
-        if (targetScreen) {
-             showScreen(targetScreen);
-             showMainNavigationBar(); // Make sure nav bar is visible on all core app screens
-        }
-    }
-    
-    // --- Event Listeners for index.html ---
-    document.addEventListener('DOMContentLoaded', () => {
-        
-        loadInitialState();
-        updateCartCount();
-        
-        // Activate Language Buttons
-        document.getElementById('lang-en')?.addEventListener('click', () => switchLanguage('en'));
-        document.getElementById('lang-ml')?.addEventListener('click', () => switchLanguage('ml'));
-        
-        // ACTIVATE CONTINUE BUTTON
-        document.getElementById('continue-btn')?.addEventListener('click', handleContinueBtn);
-    });
+function calculateTotal() {
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return total;
 }
 
-// =================================================================
-// 3. CHECKOUT LOGIC (checkout.html)
-// =================================================================
-else if (pathname.includes('checkout.html')) {
+function renderCheckoutSummary() {
+    if (getCurrentPage() !== 'checkout') return;
     
-    function validateAndPay() {
-        const address = document.getElementById('full-address').value.trim();
-        const pincode = document.getElementById('pincode').value.trim();
-        let valid = true;
+    const summaryItems = document.getElementById('summary-items');
+    let total = 0;
+    summaryItems.innerHTML = '';
 
-        const addressError = document.getElementById('address-error');
-        const pincodeError = document.getElementById('pincode-error');
-
-        // Simple validation
-        if (address.length < 15) {
-            addressError.style.display = 'block';
-            valid = false;
-        } else {
-            addressError.style.display = 'none';
-        }
-
-        if (pincode.length !== 6 || isNaN(pincode)) {
-            pincodeError.style.display = 'block';
-            valid = false;
-        } else {
-            pincodeError.style.display = 'none';
-        }
-
-        if (valid) {
-            // Simulate payment success and navigate to thank-you screen
-            showScreen('thank-you');
-        }
+    if (cart.length === 0) {
+        summaryItems.innerHTML = '<p>Your cart is empty.</p>';
+        document.getElementById('pay-now-btn').disabled = true;
+    } else {
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            summaryItems.innerHTML += `
+                <div class="summary-line">
+                    <span>${item.title} (x${item.quantity})</span>
+                    <span>₹${itemTotal}</span>
+                </div>
+            `;
+        });
     }
-    
-    document.addEventListener('DOMContentLoaded', () => {
-        // Load user info onto checkout fields
-        document.getElementById('checkout-name').value = userInfo.name || 'N/A';
-        document.getElementById('checkout-phone').value = userInfo.phone ? `+91 ${userInfo.phone}` : 'N/A';
 
-        // ACTIVATE PAY NOW BUTTON
-        document.getElementById('pay-now-btn')?.addEventListener('click', validateAndPay);
-        updateCartCount();
-    });
+    document.getElementById('total-amount').innerText = `₹${total}`;
+    document.getElementById('pay-btn-text').innerText = `₹${total} അടയ്ക്കുക`;
 }
+
+function processPayment() {
+    if (getCurrentPage() !== 'checkout') return;
+
+    const address = document.getElementById('address').value.trim();
+    const pincode = document.getElementById('pincode').value.trim();
+    let isValid = true;
+
+    // Basic Validation
+    if (address.length < 10) {
+        document.getElementById('address-error').innerText = "Please enter a complete address.";
+        document.getElementById('address-error').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('address-error').style.display = 'none';
+    }
+
+    if (pincode.length !== 6 || isNaN(pincode)) {
+        document.getElementById('pincode-error').innerText = "Please enter a 6-digit PIN code.";
+        document.getElementById('pincode-error').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('pincode-error').style.display = 'none';
+    }
+
+    if (isValid) {
+        // Clear cart after successful order
+        cart = [];
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Show thank you screen
+        document.getElementById('checkout-screen').style.display = 'none';
+        document.getElementById('thank-you-screen').style.display = 'flex';
+        window.scrollTo(0, 0); // Scroll to top
+    }
+}
+
+function handleCheckoutInit() {
+    if (getCurrentPage() !== 'checkout') return;
+    
+    // Initial display setup
+    document.getElementById('checkout-screen').style.display = 'flex';
+    document.getElementById('thank-you-screen').style.display = 'none';
+    renderCheckoutSummary();
+}
+
+// =======================================================
+// 5. INITIALIZATION LOGIC (Runs on every page load)
+// =======================================================
+
+window.addEventListener('load', () => {
+    const page = getCurrentPage();
+
+    if (page === 'index') {
+        handleIndexInit();
+    } else if (page === 'home') {
+        handleHomeInit();
+    } else if (page === 'checkout') {
+        handleCheckoutInit();
+    }
+});

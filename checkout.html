@@ -1,193 +1,78 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>BooksByNIK App - Checkout</title>
-
-    <link rel="stylesheet" href="style.css?v=2150"> 
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BooksByNIK - Checkout</title>
+    <link rel="stylesheet" href="style.css?v=3001">
 </head>
-
 <body>
-
 <div class="app-container">
 
-    
-
-    <div id="checkout-screen" class="app-screen">
-
-        <div class="header-with-back">
-
-            <button class="back-btn" onclick="location.href = 'index.html?screen=cart'">←</button>
-
-            <h2 class="screen-title-ml">ചെക്ക്ഔട്ട്</h2>
-
-            <button class="dark-mode-toggle">🌙</button>
-
-        </div>
-
-        <div class="checkout-sections">
-
-            <section class="info-section">
-
-                <h3 class="section-title-ml">🧍 നിങ്ങളുടെ വിവരങ്ങൾ</h3>
-
-                <label class="input-label-ml">മുഴുവൻ പേര്</label>
-
-                <input type="text" id="checkout-name" value="" readonly>
-
-                
-
-                <label class="input-label-ml">ഫോൺ നമ്പർ</label>
-
-                <input type="tel" id="checkout-phone" value="" readonly>
-
-            </section>
-
-            <section class="info-section">
-
-                <h3 class="section-title-ml">🏠 ഡെലിവറി വിലാസം</h3>
-
-                <label class="input-label-ml">പൂർണ്ണ വിലാസം</label>
-
-                <textarea id="full-address" placeholder="വീട്/ഫ്ലാറ്റ് നമ്പർ, തെരുവ്, ഏരിയ, നഗരം, സംസ്ഥാനം"></textarea>
-
-                <p id="address-error" style="display: none;">Please enter a complete address</p>
-
-                
-
-                <label class="input-label-ml">പിൻകോഡ്</label>
-
-                <input type="number" id="pincode" placeholder="6 അക്ക പിൻകോഡ്" maxlength="6" inputmode="numeric">
-
-                <p id="pincode-error" style="display: none;">Enter a valid 6-digit pincode</p>
-
-            </section>
-
-            <section class="info-section">
-
-                <h3 class="section-title-ml">📦 ഓർഡർ സംഗ്രഹം</h3>
-
-                <div class="summary-line">
-
-                    <span>ഹൃദയത്തിന്റെ മന്ത്രണങ്ങൾ (എണ്ണം: <span id="checkout-qty">1</span>)</span>
-
-                    <span id="checkout-price">₹299</span>
-
-                </div>
-
-                <div class="summary-total">
-
-                    <span>ആകെ</span>
-
-                    <span id="checkout-total-price">₹299</span>
-
-                </div>
-
-            </section>
-
-        </div>
-
-        <div class="payment-footer">
-
-            <button class="pay-now-btn" id="pay-now-btn">
-
-                💳 ഇപ്പോൾ പണം നൽകുക
-
-            </button>
-
-            <p class="secure-payment-note">
-
-                🛡️ UPI വഴി സുരക്ഷിത പേയ്മെന്റ്
-
-            </p>
-
-        </div>
-
-    </div>
-
-    
-
-    <div id="thank-you-screen" class="app-screen" style="display: none;">
-
-        <div class="header-with-back">
-
-            <h2 class="screen-title-ml">ഓർഡർ വിശദാംശങ്ങൾ</h2>
-
-            <button class="dark-mode-toggle">🌙</button>
-
-        </div>
-
-        
-
-        <div class="thank-you-content">
-
-            <div class="success-icon">✅</div>
-
-            <h1 class="thank-you-title">നന്ദി!</h1>
-
-            <p class="thank-you-message">നിങ്ങളുടെ ഓർഡർ വിജയകരമായി സമർപ്പിച്ചു</p>
-
-            <div class="info-section">
-
-                <h3 class="section-title-ml">ഓർഡർ നമ്പർ</h3>
-
-                <p class="order-number">ORD-1764923956267</p>
-
-                <p class="order-date">⏲️ 2025, ഡിസംബർ 5 02:09 PM</p>
-
-            </div>
-
-            
-
-            <button class="continue-button" onclick="location.href = 'index.html?screen=home'">
-
-                കൂടുതൽ പുസ്തകങ്ങൾ ബ്രൗസ് ചെയ്യുക
-
-            </button>
-
-        </div>
-
-    </div>
-
-    
-
-    <nav class="bottom-nav">
-
-        <button class="nav-item" data-target="home" onclick="location.href = 'index.html?screen=home'">
-
-            <span class="icon">🏠</span>
-
-            <span data-ml="ഹോം">ഹോം</span>
-
-        </button>
-
-        <button class="nav-item" data-target="cart" onclick="location.href = 'index.html?screen=cart'">
-
-            <span class="icon">🛒</span>
-
-            <span class="cart-badge" id="cart-count">0</span>
-
-            <span data-ml="കാർട്ട്">കാർട്ട്</span>
-
-        </button>
-
-        <button class="nav-item" data-target="profile" onclick="location.href = 'index.html?screen=profile'">
-
-            <span class="icon">👤</span>
-
-            <span data-ml="പ്രൊഫൈൽ">പ്രൊഫൈൽ</span>
-
-        </button>
-
-    </nav>
+    <div id="checkout-screen" class="app-screen">
+        <div class="header-with-back">
+            <button class="back-btn" onclick="location.href = 'home.html'">←</button>
+            <h2 class="screen-title-ml">ചെക്ക്ഔട്ട്</h2>
+            <button class="dark-mode-toggle">🌙</button>
+        </div>
+
+        <div class="checkout-sections">
+            <div class="info-section">
+                <span class="section-title-ml">ഷിപ്പിംഗ് വിലാസം</span>
+                <div class="input-group">
+                    <label for="address">പൂർണ്ണമായ വിലാസം</label>
+                    <textarea id="address" placeholder="വീട്ടുപേര്, സ്ഥലം, പോസ്റ്റ് ഓഫീസ്" rows="3"></textarea>
+                    <p id="address-error" style="display:none;"></p>
+                </div>
+                <div class="input-group">
+                    <label for="pincode">പിൻ കോഡ്</label>
+                    <input type="number" id="pincode" placeholder="6-അക്ക പിൻ കോഡ്" maxlength="6">
+                    <p id="pincode-error" style="display:none;"></p>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <span class="section-title-ml">ഓർഡർ സംഗ്രഹം</span>
+                <div id="summary-items">
+                    </div>
+                
+                <div class="summary-line">
+                    <span>ഷിപ്പിംഗ്</span>
+                    <span>₹0 (സൗജന്യം)</span>
+                </div>
+                <div class="summary-total">
+                    <span>ആകെ അടയ്‌ക്കേണ്ട തുക</span>
+                    <span id="total-amount">₹0</span>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <span class="section-title-ml">പേയ്‌മെൻ്റ്</span>
+                <p>പേയ്‌മെൻ്റ് രീതി: UPI/COD</p>
+                <div id="payment-options">
+                    </div>
+            </div>
+        </div>
+
+        <div class="payment-footer">
+            <button class="pay-now-btn" id="pay-now-btn" onclick="processPayment()">
+                <span id="pay-btn-text">₹0 അടയ്ക്കുക</span>
+            </button>
+            <p class="secure-payment-note">🛡️ UPI വഴി സുരക്ഷിത പേയ്‌മെൻ്റ്</p>
+        </div>
+    </div>
+
+    <div id="thank-you-screen" class="app-screen" style="display: none;">
+        <div class="thank-you-content">
+            <span class="success-icon">✅</span>
+            <h2 class="thank-you-title">ഓർഡർ വിജയകരമായി പ്ലേസ് ചെയ്തു!</h2>
+            <p>നിങ്ങളുടെ ഓർഡർ #1234 ഉടൻ അയയ്ക്കുന്നതാണ്. സപ്പോർട്ടിനായി 9020xxxxxx എന്ന നമ്പറിൽ ബന്ധപ്പെടുക.</p>
+            <button class="continue-button" style="margin-top: 30px;" onclick="location.href = 'home.html'">
+                ഹോം പേജിലേക്ക് മടങ്ങുക
+            </button>
+        </div>
+    </div>
 </div>
-<script src="script.js?v=2151"></script> 
+<script src="script.js?v=3001"></script>
 </body>
 </html>

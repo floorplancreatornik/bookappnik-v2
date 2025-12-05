@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BooksByNIK App - Home</title>
-    <link rel="stylesheet" href="style.css?v=2153"> 
+    <title>BooksByNIK - Login</title>
+    <link rel="stylesheet" href="style.css?v=3001"> 
 </head>
 <body>
-<div class="app-container">
+<div class="app-container" id="login-container">
     
     <div id="login-screen" class="app-screen">
         <div class="content-box">
@@ -36,95 +36,11 @@
                 </div>
             </div>
             
-            <button class="continue-button" id="continue-btn">Continue</button>
+            <button class="continue-button" id="continue-btn" onclick="validateAndRedirect()">Continue</button>
         </div>
     </div>
     
-    <div id="home-screen" class="app-screen" style="display: none;">
-        <header class="app-header">
-            <div class="author-info">
-                <div class="author-icon-small"></div>
-                <div>
-                    <div class="header-title">BooksByNIK</div>
-                    <div class="header-subtitle" id="home-author-tag">രചന: NIK</div>
-                </div>
-            </div>
-            <button class="dark-mode-toggle">🌙</button>
-        </header>
-        <div class="book-list-container">
-            <h2 id="all-books-title">എല്ലാ പുസ്തകങ്ങളും</h2>
-            <p class="collection-subtitle" id="browse-collection">ഞങ്ങളുടെ ശേഖരം ബ്രൗസ് ചെയ്യുക</p>
-            
-            <div class="book-card" onclick="showBookDetails('ഹൃദയത്തിന്റെ മന്ത്രണങ്ങൾ', 299, 'Poetry', 'WOH001')">
-                <div class="price-tag">₹299</div>
-                <img src="images/placeholder.png" alt="Book Cover" class="book-cover">
-                <div class="book-details">
-                    <div class="book-title-ml">ഹൃദയത്തിന്റെ മന്ത്രണങ്ങൾ</div>
-                    <div class="book-author">രചന NIK</div>
-                    <div class="book-category">Poetry</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div id="book-details-screen" class="app-screen" style="display: none;">
-        <div class="header-with-back">
-            <button class="back-btn" onclick="showScreen('home')">←</button>
-            <h2 class="screen-title-ml">പുസ്തക വിഭാഗങ്ങൾ</h2>
-            <button class="dark-mode-toggle">🌙</button>
-        </div>
-        <div class="book-details-content">
-            </div>
-        <div class="bottom-actions-bar">
-            <button class="buy-now-btn" onclick="buyNow()">ഇപ്പോൾ വാങ്ങുക</button>
-            <button class="add-to-cart-btn" id="add-to-cart-btn" onclick="addToCart()">
-                🛒 കാർട്ടിലേക്ക് ചേർക്കുക
-            </button>
-        </div>
-    </div>
-    
-    <div id="cart-screen" class="app-screen" style="display: none;">
-        <div class="header-with-back">
-            <button class="back-btn" onclick="showScreen('home')">←</button>
-            <h2 class="screen-title-ml">നിങ്ങളുടെ കാർട്ട്</h2>
-            <button class="dark-mode-toggle">🌙</button>
-        </div>
-        <div class="cart-actions">
-            <button class="checkout-btn continue-button" onclick="location.href = 'checkout.html'">
-                🛒 ചെക്ക്ഔട്ടിലേക്ക് പോകുക
-            </button>
-            <button class="continue-shopping-btn add-to-cart-btn" onclick="showScreen('home')">
-                ഷോപ്പിംഗ് തുടരുക
-            </button>
-        </div>
-    </div>
-    
-    <div id="profile-screen" class="app-screen" style="display: none;">
-        <div class="header-with-back">
-            <button class="back-btn" onclick="showScreen('home')">←</button>
-            <h2 class="screen-title-ml">പ്രൊഫൈൽ</h2>
-            <button class="dark-mode-toggle">🌙</button>
-        </div>
-        <div class="profile-content">
-            </div>
-    </div>
-    
-    <nav class="bottom-nav" id="main-bottom-nav" style="display: none;">
-        <button class="nav-item active" data-target="home" onclick="showScreen('home', this)">
-            <span class="icon">🏠</span>
-            <span data-ml="ഹോം">ഹോം</span>
-        </button>
-        <button class="nav-item cart-item" data-target="cart" onclick="showScreen('cart', this)">
-            <span class="icon">🛒</span>
-            <span class="cart-badge" id="cart-count">0</span>
-            <span data-ml="കാർട്ട്">കാർട്ട്</span>
-        </button>
-        <button class="nav-item" data-target="profile" onclick="showScreen('profile', this)">
-            <span class="icon">👤</span>
-            <span data-ml="പ്രൊഫൈൽ">പ്രൊഫൈൽ</span>
-        </button>
-    </nav>
 </div>
-<script src="script.js?v=2153"></script>
+<script src="script.js?v=3001"></script>
 </body>
 </html>
