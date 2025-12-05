@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div class="app-container">
-
     <div id="login-screen" class="app-screen">
         <div class="content-box">
             <div class="author-image-placeholder"></div>
@@ -40,8 +38,8 @@
             <button class="continue-button" id="continue-btn">Continue</button>
         </div>
     </div>
-
-    <div id="home-screen" class="app-screen">
+    
+    <div id="home-screen" class="app-screen" style="display: none;">
         <header class="app-header">
             <div class="author-info">
                 <div class="author-icon-small"></div>
@@ -52,7 +50,6 @@
             </div>
             <button class="dark-mode-toggle">🌙</button>
         </header>
-
         <div class="book-list-container">
             <h2 id="all-books-title">എല്ലാ പുസ്തകങ്ങളും</h2>
             <p class="collection-subtitle" id="browse-collection">ഞങ്ങളുടെ ശേഖരം ബ്രൗസ് ചെയ്യുക</p>
@@ -69,13 +66,12 @@
         </div>
     </div>
     
-    <div id="book-details-screen" class="app-screen">
+    <div id="book-details-screen" class="app-screen" style="display: none;">
         <div class="header-with-back">
             <button class="back-btn" onclick="showScreen('home')">←</button>
             <h2 class="screen-title-ml">പുസ്തക വിഭാഗങ്ങൾ</h2>
             <button class="dark-mode-toggle">🌙</button>
         </div>
-
         <div class="book-details-content">
             <div class="main-cover-area">
                 <img src="images/placeholder-main.png" alt="Main Book Cover" id="main-book-cover" class="main-book-cover">
@@ -86,7 +82,6 @@
                 <img src="images/placeholder-p1.png" data-full-src="images/placeholder-preview1.png" class="thumbnail" onclick="swapImage(this)">
                 <img src="images/placeholder-p2.png" data-full-src="images/placeholder-preview2.png" class="thumbnail" onclick="swapImage(this)">
             </div>
-
             <div class="book-metadata">
                 <h1 class="book-title-ml" id="detail-title">ഹൃദയത്തിന്റെ മന്ത്രണങ്ങൾ</h1>
                 <p class="author-tag">രചന NIK</p>
@@ -96,14 +91,12 @@
                     <span class="format-small">(Paperback)</span>
                 </div>
             </div>
-
             <div class="description-box">
                 <p class="description-text-ml">
                     മനുഷ്യ വികാരങ്ങളുടേയും... (Description placeholder)
                 </p>
             </div>
         </div>
-
         <div class="bottom-actions-bar">
             <button class="buy-now-btn" onclick="buyNow()">ഇപ്പോൾ വാങ്ങുക</button>
             <button class="add-to-cart-btn" id="add-to-cart-btn" onclick="addToCart()">
@@ -111,14 +104,13 @@
             </button>
         </div>
     </div>
-
-    <div id="cart-screen" class="app-screen">
+    
+    <div id="cart-screen" class="app-screen" style="display: none;">
         <div class="header-with-back">
             <button class="back-btn" onclick="showScreen('home')">←</button>
             <h2 class="screen-title-ml">നിങ്ങളുടെ കാർട്ട്</h2>
             <button class="dark-mode-toggle">🌙</button>
         </div>
-
         <div id="cart-content">
             <div id="cart-filled-state">
                 <div class="cart-item-card">
@@ -128,7 +120,6 @@
                          <div>രചന NIK</div>
                          <div>₹299</div>
                     </div>
-
                     <div class="quantity-control-row">
                         <span>എണ്ണം:</span>
                         <div class="quantity-selector">
@@ -139,7 +130,6 @@
                         <button class="remove-btn" onclick="removeFromCart()">🗑️ നീക്കം ചെയ്യുക</button>
                     </div>
                 </div>
-
                 <div class="total-summary-box">
                     <div class="summary-row">
                         <span class="summary-label">ആകെ തുക</span>
@@ -155,7 +145,6 @@
                     </button>
                 </div>
             </div>
-
             <div id="cart-empty-state">
                 <div class="empty-state">
                     <div class="empty-cart-icon">🛒</div>
@@ -167,14 +156,13 @@
             </div>
         </div>
     </div>
-
-    <div id="checkout-screen" class="app-screen">
+    
+    <div id="checkout-screen" class="app-screen" style="display: none;">
         <div class="header-with-back">
             <button class="back-btn" onclick="showScreen('cart')">←</button>
             <h2 class="screen-title-ml">ചെക്ക്ഔട്ട്</h2>
             <button class="dark-mode-toggle">🌙</button>
         </div>
-
         <div class="checkout-sections">
             <section class="info-section">
                 <h3 class="section-title-ml">🧍 നിങ്ങളുടെ വിവരങ്ങൾ</h3>
@@ -184,7 +172,6 @@
                 <label class="input-label-ml">ഫോൺ നമ്പർ</label>
                 <input type="tel" id="checkout-phone" value="" readonly>
             </section>
-
             <section class="info-section">
                 <h3 class="section-title-ml">🏠 ഡെലിവറി വിലാസം</h3>
                 <label class="input-label-ml">പൂർണ്ണ വിലാസം</label>
@@ -195,7 +182,6 @@
                 <input type="number" id="pincode" placeholder="6 അക്ക പിൻകോഡ്" maxlength="6" inputmode="numeric">
                 <p id="pincode-error">Enter a valid 6-digit pincode</p>
             </section>
-
             <section class="info-section">
                 <h3 class="section-title-ml">📦 ഓർഡർ സംഗ്രഹം</h3>
                 <div class="summary-line">
@@ -208,7 +194,6 @@
                 </div>
             </section>
         </div>
-
         <div class="payment-footer">
             <button class="pay-now-btn" id="pay-now-btn">
                 💳 ഇപ്പോൾ പണം നൽകുക
@@ -218,8 +203,8 @@
             </p>
         </div>
     </div>
-
-    <div id="profile-screen" class="app-screen">
+    
+    <div id="profile-screen" class="app-screen" style="display: none;">
         <div class="header-with-back">
             <button class="back-btn" onclick="showScreen('home')">←</button>
             <h2 class="screen-title-ml">പ്രൊഫൈൽ</h2>
@@ -229,7 +214,7 @@
              </div>
     </div>
     
-    <div id="thank-you-screen" class="app-screen">
+    <div id="thank-you-screen" class="app-screen" style="display: none;">
         <div class="header-with-back">
             <h2 class="screen-title-ml">ഓർഡർ വിശദാംശങ്ങൾ</h2>
             <button class="dark-mode-toggle">🌙</button>
@@ -239,7 +224,6 @@
             <div class="success-icon">✅</div>
             <h1 class="thank-you-title">നന്ദി!</h1>
             <p class="thank-you-message">നിങ്ങളുടെ ഓർഡർ വിജയകരമായി സമർപ്പിച്ചു</p>
-
             <div class="info-section">
                 <h3 class="section-title-ml">ഓർഡർ നമ്പർ</h3>
                 <p class="order-number">ORD-1764923956267</p>
@@ -251,7 +235,7 @@
             </button>
         </div>
     </div>
-
+    
     <nav class="bottom-nav">
         <button class="nav-item active" data-target="home" onclick="showScreen('home', this)">
             <span class="icon">🏠</span>
@@ -268,8 +252,6 @@
         </button>
     </nav>
 </div>
-
 <script src="script.js"></script>
-
 </body>
 </html>
