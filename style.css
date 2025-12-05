@@ -2,15 +2,13 @@
 /* 1. GLOBAL RESET AND BASE STYLES */
 /* ==================================== */
 :root {
-    /* Kerala-themed colors inspired by app screenshots */
-    --primary-color: #e67e22; /* Vibrant Orange/Yellow */
-    --secondary-color: #f39c12; 
+    --primary-color: #e67e22; /* Orange */
+    --secondary-color: #f39c12; /* Lighter Orange */
     --text-color: #2c3e50; /* Dark Grey */
     --background-color: #ecf0f1; /* Light Grey/White */
     --input-bg-color: #ffffff;
     --border-color: #bdc3c7;
-    --success-color: #27ae60; /* Green for Success/Buy */
-    --cart-color: #3498db; /* Blue for Cart */
+    --success-color: #27ae60;
 }
 
 * {
@@ -46,31 +44,16 @@ body.dark-mode {
     --border-color: #5d6d7e;
 }
 
-body.dark-mode .app-header,
+body.dark-mode .app-header {
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
 body.dark-mode .bottom-nav {
     background-color: #34495e;
 }
 body.dark-mode .nav-item {
-    color: #bdc3c7;
+    color: #ecf0f1;
 }
-body.dark-mode input[type="text"],
-body.dark-mode input[type="tel"],
-body.dark-mode input[type="number"],
-body.dark-mode textarea,
-body.dark-mode .lang-button {
-    color: var(--text-color);
-    border-color: #5d6d7e;
-}
-body.dark-mode .phone-input .country-code {
-    background-color: #34495e;
-    color: var(--text-color);
-}
-body.dark-mode .book-card,
-body.dark-mode .info-section {
-    background-color: #34495e;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-}
-
 
 /* ==================================== */
 /* 3. APP SCREENS & HEADER */
@@ -103,9 +86,6 @@ body.dark-mode .info-section {
     border-radius: 50%;
     margin-right: 10px;
 }
-.header-title {
-    font-weight: 700;
-}
 .header-with-back {
     display: flex;
     justify-content: space-between;
@@ -130,7 +110,6 @@ body.dark-mode .info-section {
     border: none;
     font-size: 20px;
     cursor: pointer;
-    color: var(--text-color);
 }
 
 /* ==================================== */
@@ -141,7 +120,6 @@ body.dark-mode .info-section {
     align-items: center;
     text-align: center;
     padding: 50px 20px;
-    min-height: 100vh; /* Login screen should take full height when nav is hidden */
 }
 
 .author-image-placeholder {
@@ -332,7 +310,7 @@ textarea {
 .add-to-cart-btn {
     flex: 1;
     padding: 12px;
-    background-color: var(--cart-color); /* Blue */
+    background-color: #3498db; /* Blue */
     color: white;
     border: none;
     border-radius: 8px;
@@ -382,7 +360,7 @@ textarea {
     color: red;
     font-size: 0.8em;
     margin-top: 5px;
-    /* display: none is set in checkout.html initially */
+    display: none; /* Controlled by JS */
 }
 
 /* Checkout Footer */
@@ -423,6 +401,15 @@ textarea {
 .thank-you-title {
     color: var(--success-color);
     margin-bottom: 10px;
+}
+.order-number {
+    font-weight: 600;
+    font-size: 1.1em;
+    color: var(--primary-color);
+}
+.order-date {
+    font-size: 0.9em;
+    color: #7f8c8d;
 }
 
 /* ==================================== */
@@ -481,24 +468,20 @@ textarea {
     text-align: center;
     line-height: 1.2;
     font-weight: bold;
-    /* display: none is set by JS if cart is empty */
+    display: none; /* Controlled by JS */
 }
 
-/* ================================================================= */
-/* 🛑 CRITICAL HIDE NAV FIX (To eliminate visual overlap on Login) 🛑 */
-/* This rule must be the last one to ensure maximum precedence */
-/* ================================================================= */
-
-/* 1. Forces the main navigation bar to be hidden by default. 
-   The JS function showMainNavigationBar() uses inline style to override this ONLY on login success.
-*/
+/* ==================================== */
+/* 🛑 CRITICAL HIDE NAV FIX (Must be at the very bottom) 🛑 */
+/* ==================================== */
+/* Ensure the main navigation bar is hidden by default. 
+   This prevents it from bleeding onto the login screen before JS runs. 
+   The JS showMainNavigationBar() will override this after login. */
 #main-bottom-nav {
     display: none !important;
 }
 
-/* 2. Ensures the action bar (like the Buy/Add to Cart buttons) 
-   is also hidden if the Login screen is active, preventing visual glitches.
-*/
+/* Ensures actions bar (like the one in book-details) doesn't appear on login screen */
 #login-screen + .bottom-actions-bar {
     display: none !important;
 }
